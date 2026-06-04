@@ -122,6 +122,23 @@ function onTitleClick(){
   if(titleClicks>=5){titleClicks=0;showPw=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},30);}
 }
 
+
+var TG_TOKEN='8944362004:AAFmcsO5W3XtZtxWfsGHD1MO3QcLKbhO6zE';
+var TG_CHAT='329728752';
+
+function sendTG(name, phone, date, time){
+  var text='\u{1F4C5} *Новая запись на консультацию*\n\n'
+    +'\u{1F464} Имя: '+name+'\n'
+    +'\u{1F4DE} Телефон: '+phone+'\n'
+    +'\u{1F4C6} Дата: '+date+'\n'
+    +'\u23F0 Время: '+time;
+  fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({chat_id:TG_CHAT,text:text,parse_mode:'Markdown'})
+  });
+}
+
 function render(){
   var pg=document.getElementById('page');
   pg.innerHTML='';
@@ -228,7 +245,17 @@ function render(){
         sc.appendChild(btn);
       } else {
         var inf=mk('div','inline-bk','<input id="ibk'+s.i+'" type="text" placeholder="Имя" maxlength="50"><input id="iph'+s.i+'" type="tel" placeholder="Телефон" maxlength="20"><button class="ok">ОК</button><button class="cx">✕</button>');
-        inf.querySelector('.ok').onclick=function(){var nm=document.getElementById('ibk'+s.i).value.trim();var ph=document.getElementById('iph'+s.i).value.trim();if(!nm||!ph)return;if(!bookings[sel])bookings[sel]={};bookings[sel][s.i]=nm+' · '+ph;saveBk();exSlot=null;render()};
+        inf.querySelector('.ok').onclick=function(){
+  var nm=document.getElementById('ibk'+s.i).value.trim();
+  var ph=document.getElementById('iph'+s.i).value.trim();
+  if(!nm||!ph)return;
+  if(!bookings[sel])bookings[sel]={};
+  bookings[sel][s.i]=nm+' · '+ph;
+  saveBk();
+  var lbl2=dlbl(sel);
+  sendTG(nm,ph,lbl2.day+' '+lbl2.wd,s.t);
+  exSlot=null;render();
+};
         inf.querySelector('.cx').onclick=function(){exSlot=null;render()};
         inf.querySelectorAll('input').forEach(function(inp){inp.onkeydown=function(e){if(e.key==='Enter')inf.querySelector('.ok').click()}});
         sc.appendChild(inf);
