@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Запись на приём</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#ece7de;font-family:'Inter',sans-serif;min-height:100vh}
+#page{max-width:420px;margin:0 auto;padding:1.25rem 1rem 3rem}
+.page-title{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:3px;letter-spacing:-0.3px}
+.page-sub{font-size:12px;color:#9a9488;margin-bottom:1.25rem}
+.cal-card{background:#f0ebe1;border-radius:18px;padding:1.25rem 1rem 1rem}
+.cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
+.cal-nav-btn{width:34px;height:34px;background:#fff;border:none;border-radius:10px;cursor:pointer;font-size:15px;color:#555;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.cal-nav-btn:hover{background:#f5f5f5}
+.cal-mo-name{font-family:'Lora',serif;font-size:17px;font-weight:500;color:#1a1a1a}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.dow{font-size:11px;color:#aaa;text-align:center;padding:4px 0;font-weight:500;letter-spacing:.5px}
+.day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;font-size:13px;color:#bbb;position:relative;cursor:default;transition:background .15s}
+.day.cur{color:#888}
+.day.avail{background:#fff;color:#1a1a1a;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06)}
+.day.avail:hover{background:#f5f5f5}
+.day.sel{background:#b8882a!important;color:#fff!important;box-shadow:0 2px 6px rgba(184,136,42,.3)}
+.day.today:not(.sel){border:1.5px solid #c8882a;color:#c8882a}
+.dot{width:5px;height:5px;border-radius:50%;background:#3d6b45;position:absolute;bottom:4px}
+.dot.full{background:#bbb}
+.cal-info{font-size:11px;color:#aaa;margin-top:.875rem;line-height:1.6;padding:0 2px}
+.slots-area{margin-top:1.25rem}
+.date-header{margin-bottom:.875rem}
+.dh-day{font-size:16px;font-weight:700;color:#1a1a1a}
+.dh-wd{font-size:13px;color:#9a9488;margin-top:1px}
+.slot-card{background:#fff;border-radius:14px;padding:13px 15px;margin-bottom:10px}
+.slot-card.taken{opacity:.65}
+.sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.sc-time{font-size:15px;font-weight:700;color:#1a1a1a;letter-spacing:-.2px}
+.sc-free{font-size:11px;font-weight:600;color:#3d6b45;letter-spacing:.5px;text-transform:uppercase}
+.sc-taken-lbl{font-size:11px;color:#bbb;letter-spacing:.5px;text-transform:uppercase}
+.sc-btn{width:100%;background:#e8f2ec;border:none;border-radius:10px;padding:10px 12px;cursor:pointer;transition:background .15s;text-align:left}
+.sc-btn:hover{background:#d5e9dc}
+.sc-btn-name{font-size:13px;font-weight:700;color:#3d6b45}
+.sc-btn-sub{font-size:11px;color:#5a8f6a;margin-top:2px}
+.sc-taken-btn{width:100%;background:#f2f2f2;border:none;border-radius:10px;padding:10px 12px;text-align:left}
+.sc-taken-name{font-size:13px;font-weight:600;color:#999}
+.sc-taken-sub{font-size:11px;color:#bbb;margin-top:2px}
+.inline-bk{margin-top:10px;padding-top:10px;border-top:1px solid #f0ebe1;display:flex;gap:6px}
+.inline-bk input{flex:1;padding:8px 10px;border-radius:9px;border:1px solid #ddd;font-size:13px;color:#1a1a1a;background:#f9f9f9;font-family:'Inter',sans-serif}
+.inline-bk input:focus{outline:none;border-color:#3d6b45}
+.inline-bk .ok{padding:8px 14px;border-radius:9px;background:#3d6b45;color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer}
+.inline-bk .cx{padding:8px 10px;border-radius:9px;border:1px solid #e5e5e5;background:#fff;color:#aaa;font-size:12px;cursor:pointer}
+.admin-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:#f0ebe1;border-radius:10px;margin-bottom:1.1rem;border:1px solid #e0dbd0}
+.admin-lbl{font-size:12px;font-weight:600;color:#3d6b45}
+.xbtn{font-size:11px;color:#9a9488;background:none;border:none;cursor:pointer}
+.cfg-card{background:#f0ebe1;border:1px solid #e0dbd0;border-radius:14px;padding:1rem;margin-top:1rem}
+.cfg-card h3{font-size:13px;font-weight:600;color:#1a1a1a;margin-bottom:.75rem}
+.crow{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+.clbl{font-size:12px;color:#7a7468}
+.cinp{width:62px;padding:5px 8px;border-radius:8px;border:1px solid #ddd;background:#fff;font-size:12px;text-align:center;color:#1a1a1a}
+.tgl{position:relative;width:38px;height:21px;flex-shrink:0}
+.tgl input{opacity:0;position:absolute;width:0;height:0}
+.ts{position:absolute;inset:0;background:#ccc;border-radius:11px;cursor:pointer;transition:background .2s}
+.tgl input:checked+.ts{background:#3d6b45}
+.ts:after{content:'';position:absolute;width:15px;height:15px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
+.tgl input:checked+.ts:after{transform:translateX(17px)}
+.svbtn{width:100%;padding:9px;background:#3d6b45;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;margin-top:7px;font-family:'Inter',sans-serif}
+.svbtn:hover{background:#2d5235}
+.clrdaybtn{width:100%;padding:7px;background:transparent;color:#9a9488;border:1px solid #ddd;border-radius:9px;font-size:11px;cursor:pointer;margin-top:5px}
+.foot{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #e0dbd0}
+.alinkbtn{font-size:11px;color:#bbb;background:none;border:none;cursor:pointer;text-decoration:underline;font-family:'Inter',sans-serif}
+.pwrow{display:flex;gap:5px;justify-content:center;margin-top:7px}
+.pwrow input{width:110px;padding:7px 10px;border-radius:9px;border:1px solid #ddd;font-size:12px;color:#1a1a1a;background:#fff;font-family:'Inter',sans-serif}
+.pwrow input:focus{outline:none;border-color:#3d6b45}
+.gobtn{padding:7px 14px;border-radius:9px;background:#1a1a1a;color:#fff;border:none;font-size:12px;cursor:pointer}
+.cxbtn2{padding:7px 10px;border-radius:9px;border:1px solid #ddd;background:#fff;color:#aaa;font-size:12px;cursor:pointer}
+.pwerr{font-size:11px;color:#c0392b;text-align:center;margin-top:5px}
+.savedmsg{font-size:11px;color:#3d6b45;text-align:center;margin-top:5px;font-weight:600}
+</style>
+</head>
+<body>
+<div id="page"></div>
+<script>
+var MO=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+var MOR=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+var WDR=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
+var DOW=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
+var STORE_CFG='bk-cfg-v1',STORE_BK='bk-data-v1';
+var config={},bookings={};
+var vd=new Date(),sel=null,admSel=null,exSlot=null;
+var isAdm=false,showPw=false,pwErr=false,savedMsg=false;
+vd.setDate(1);
+
+function fd(y,m,d){return y+'-'+p2(m+1)+'-'+p2(d)}
+function p2(n){return String(n).padStart(2,'0')}
+function dlbl(ds){var a=ds.split('-').map(Number),y=a[0],m=a[1],d=a[2],w=new Date(y,m-1,d).getDay();return{day:d+' '+MOR[m-1],wd:WDR[w]}}
+function getSlots(c){
+  if(!c||!c.open)return[];
+  var r=[],h=c.sh,m=c.sm;
+  for(var i=0;i<c.n;i++){var eh=h+Math.floor((m+c.dur)/60),em=(m+c.dur)%60;r.push({i:i,t:p2(h)+':'+p2(m)+' — '+p2(eh)+':'+p2(em)});h=eh;m=em;}
+  return r;
+}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function mk(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e}
+
+function loadData(){
+  try{var c=localStorage.getItem(STORE_CFG);if(c)config=JSON.parse(c);}catch(e){}
+  try{var b=localStorage.getItem(STORE_BK);if(b)bookings=JSON.parse(b);}catch(e){}
+}
+function saveCfg(){try{localStorage.setItem(STORE_CFG,JSON.stringify(config));}catch(e){}}
+function saveBk(){try{localStorage.setItem(STORE_BK,JSON.stringify(bookings));}catch(e){}}
+
+function getSubtitle(){
+  var open=Object.values(config).filter(function(c){return c&&c.open});
+  if(!open.length)return 'Выберите дату для записи';
+  var s=open[0],eh=s.sh+Math.floor((s.sm+s.dur*s.n)/60),em=(s.sm+s.dur*s.n)%60;
+  return 'слоты по '+s.dur+' мин · '+p2(s.sh)+':'+p2(s.sm)+' — '+p2(eh)+':'+p2(em);
+}
+
+function render(){
+  var pg=document.getElementById('page');
+  pg.innerHTML='';
+  var y=vd.getFullYear(),mo=vd.getMonth();
+  var td=new Date(),tds=fd(td.getFullYear(),td.getMonth(),td.getDate());
+
+  if(isAdm){
+    var bar=mk('div','admin-bar','<span class="admin-lbl">⚙ Режим администратора</span><button class="xbtn" id="xadm">Выйти</button>');
+    pg.appendChild(bar);
+    bar.querySelector('#xadm').onclick=function(){isAdm=false;admSel=null;render()};
+  } else {
+    pg.appendChild(mk('div','page-title','Запись на приём'));
+    pg.appendChild(mk('div','page-sub',getSubtitle()));
+  }
+
+  var card=mk('div','cal-card');
+  var top=mk('div','cal-top','<button class="cal-nav-btn" id="prev">‹</button><span class="cal-mo-name">'+MO[mo]+' '+y+'</span><button class="cal-nav-btn" id="next">›</button>');
+  card.appendChild(top);
+  top.querySelector('#prev').onclick=function(){vd=new Date(y,mo-1,1);render()};
+  top.querySelector('#next').onclick=function(){vd=new Date(y,mo+1,1);render()};
+
+  var g=mk('div','cal-grid');
+  DOW.forEach(function(d){g.appendChild(mk('div','dow',d))});
+  var startDow=(new Date(y,mo,1).getDay()+6)%7;
+  var dim=new Date(y,mo+1,0).getDate();
+  for(var i=0;i<startDow;i++)g.appendChild(mk('div','day'));
+  for(var d=1;d<=dim;d++){
+    (function(d){
+      var ds=fd(y,mo,d);
+      var c2=config[ds],avail=c2&&c2.open;
+      var taken=Object.keys(bookings[ds]||{}).length;
+      var full=avail&&taken>=(c2?c2.n:0);
+      var isSel=isAdm?admSel===ds:sel===ds;
+      var cls='day'+(avail||isAdm?' avail':'')+(ds===tds?' today':'')+(isSel?' sel':'');
+      if(!isSel)cls+=' cur';
+      var cell=mk('div',cls,String(d));
+      if(avail&&!isSel){var dot=mk('div','dot'+(full?' full':''));cell.appendChild(dot)}
+      if(isAdm){cell.style.cursor='pointer';cell.onclick=function(){admSel=ds;savedMsg=false;render()}}
+      else if(avail&&!full){cell.onclick=function(){sel=ds;exSlot=null;render()}}
+      g.appendChild(cell);
+    })(d);
+  }
+  card.appendChild(g);
+
+  var selCfg=sel?config[sel]:null;
+  if(!isAdm){
+    if(selCfg&&selCfg.open){
+      var eh2=selCfg.sh+Math.floor((selCfg.sm+selCfg.dur*selCfg.n)/60),em2=(selCfg.sm+selCfg.dur*selCfg.n)%60;
+      card.appendChild(mk('div','cal-info','Рабочие часы: '+p2(selCfg.sh)+':'+p2(selCfg.sm)+' — '+p2(eh2)+':'+p2(em2)+' · '+selCfg.n+' слотов · по '+selCfg.dur+' мин'));
+    } else {
+      card.appendChild(mk('div','cal-info','Выберите дату из доступных'));
+    }
+  }
+  pg.appendChild(card);
+
+  if(isAdm&&admSel){
+    var c2=config[admSel]||{open:false,n:4,sh:10,sm:0,dur:60};
+    var tk=Object.keys(bookings[admSel]||{}).length;
+    var lbl=dlbl(admSel);
+    var panel=mk('div','cfg-card','<h3>'+lbl.day+', '+lbl.wd+'</h3>'
+      +'<div class="crow"><span class="clbl">Запись открыта</span><label class="tgl"><input type="checkbox" id="cop"'+(c2.open?' checked':'')+'><span class="ts"></span></label></div>'
+      +'<div class="crow"><span class="clbl">Кол-во слотов</span><input class="cinp" type="number" id="cn" min="1" max="30" value="'+c2.n+'"></div>'
+      +'<div class="crow"><span class="clbl">Час начала</span><input class="cinp" type="number" id="csh" min="0" max="23" value="'+c2.sh+'"></div>'
+      +'<div class="crow"><span class="clbl">Минута начала</span><input class="cinp" type="number" id="csm" min="0" max="59" value="'+c2.sm+'"></div>'
+      +'<div class="crow"><span class="clbl">Длина слота (мин)</span><input class="cinp" type="number" id="cdur" min="5" max="480" value="'+c2.dur+'"></div>'
+      +(tk>0?'<div style="font-size:11px;color:#9a9488;margin-bottom:5px">Записей: '+tk+'</div>':'')
+      +'<button class="svbtn" id="csave">Сохранить</button>'
+      +(savedMsg?'<div class="savedmsg">✓ Сохранено!</div>':'')
+      +(tk>0?'<button class="clrdaybtn" id="cclr">Очистить все записи на этот день</button>':''));
+    panel.querySelector('#csave').onclick=function(){
+      config[admSel]={open:panel.querySelector('#cop').checked,n:clamp(parseInt(panel.querySelector('#cn').value)||4,1,30),sh:clamp(parseInt(panel.querySelector('#csh').value)||10,0,23),sm:clamp(parseInt(panel.querySelector('#csm').value)||0,0,59),dur:clamp(parseInt(panel.querySelector('#cdur').value)||60,5,480)};
+      saveCfg();savedMsg=true;render();setTimeout(function(){savedMsg=false},2000);
+    };
+    var cclr=panel.querySelector('#cclr');
+    if(cclr)cclr.onclick=function(){if(confirm('Удалить все записи?')){delete bookings[admSel];saveBk();render()}};
+    pg.appendChild(panel);
+  }
+
+  if(!isAdm&&sel){
+    var c2=config[sel],slts=getSlots(c2),taken=bookings[sel]||{};
+    var sa=mk('div','slots-area');
+    var lbl=dlbl(sel);
+    sa.appendChild(mk('div','date-header','<div class="dh-day">'+lbl.day+'</div><div class="dh-wd">'+lbl.wd+'</div>'));
+    slts.forEach(function(s){
+      var tk=taken[s.i],isEx=exSlot===s.i;
+      var sc=mk('div','slot-card'+(tk?' taken':''));
+      var topRow=mk('div','sc-top');
+      topRow.appendChild(mk('span','sc-time',s.t));
+      topRow.appendChild(mk('span',tk?'sc-taken-lbl':'sc-free',tk?'ЗАНЯТО':'СВОБОДНО'));
+      sc.appendChild(topRow);
+      if(!isEx){
+        var btn=mk('div',tk?'sc-taken-btn':'sc-btn');
+        btn.innerHTML=tk?'<div class="sc-taken-name">'+tk+'</div><div class="sc-taken-sub">Записан(а)</div>':'<div class="sc-btn-name">Записаться</div><div class="sc-btn-sub">Нажмите, чтобы выбрать слот</div>';
+        if(!tk){btn.onclick=function(){exSlot=s.i;render();setTimeout(function(){var el=document.getElementById('ibk'+s.i);if(el)el.focus()},20)}}
+        sc.appendChild(btn);
+      } else {
+        var inf=mk('div','inline-bk','<input id="ibk'+s.i+'" type="text" placeholder="Ваше имя" maxlength="50"><button class="ok">ОК</button><button class="cx">✕</button>');
+        inf.querySelector('.ok').onclick=function(){var nm=document.getElementById('ibk'+s.i).value.trim();if(!nm)return;if(!bookings[sel])bookings[sel]={};bookings[sel][s.i]=nm;saveBk();exSlot=null;render()};
+        inf.querySelector('.cx').onclick=function(){exSlot=null;render()};
+        inf.querySelector('input').onkeydown=function(e){if(e.key==='Enter')inf.querySelector('.ok').click()};
+        sc.appendChild(inf);
+      }
+      sa.appendChild(sc);
+    });
+    pg.appendChild(sa);
+  }
+
+  if(!isAdm){
+    var foot=mk('div','foot','<button class="alinkbtn" id="alink">Администратор</button>'+(showPw?'<div class="pwrow"><input type="password" id="pwin" placeholder="Пароль"><button class="gobtn" id="pwgo">Войти</button><button class="cxbtn2" id="pwcx">✕</button></div>'+(pwErr?'<div class="pwerr">Неверный пароль</div>':''):''));
+    pg.appendChild(foot);
+    foot.querySelector('#alink').onclick=function(){showPw=!showPw;pwErr=false;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},20)};
+    if(showPw){
+      foot.querySelector('#pwgo').onclick=function(){if(document.getElementById('pwin').value==='1234'){isAdm=true;showPw=false;pwErr=false;render()}else{pwErr=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},20)}};
+      foot.querySelector('#pwcx').onclick=function(){showPw=false;pwErr=false;render()};
+      foot.querySelector('#pwin').onkeydown=function(e){if(e.key==='Enter')foot.querySelector('#pwgo').click()};
+    }
+  }
+}
+
+loadData();
+render();
+</script>
+</body>
+</html>
