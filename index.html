@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Запись на приём</title>
+<title>Запись на консультацию</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -128,7 +128,7 @@ function render(){
     pg.appendChild(bar);
     bar.querySelector('#xadm').onclick=function(){isAdm=false;admSel=null;render()};
   } else {
-    pg.appendChild(mk('div','page-title','Запись на приём'));
+    pg.appendChild(mk('div','page-title','Запись на консультацию'));
     pg.appendChild(mk('div','page-sub',getSubtitle()));
   }
 
