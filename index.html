@@ -10,7 +10,7 @@
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#ece7de;font-family:'Inter',sans-serif;min-height:100vh}
 #page{max-width:420px;margin:0 auto;padding:1.25rem 1rem 3rem}
-.page-title{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:3px;letter-spacing:-0.3px}
+.page-title{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:3px;letter-spacing:-0.3px;cursor:default;user-select:none}
 .page-sub{font-size:12px;color:#9a9488;margin-bottom:1.25rem}
 .cal-card{background:#f0ebe1;border-radius:18px;padding:1.25rem 1rem 1rem}
 .cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
@@ -67,11 +67,9 @@ body{background:#ece7de;font-family:'Inter',sans-serif;min-height:100vh}
 .svbtn{width:100%;padding:9px;background:#3d6b45;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;margin-top:7px;font-family:'Inter',sans-serif}
 .svbtn:hover{background:#2d5235}
 .clrdaybtn{width:100%;padding:7px;background:transparent;color:#9a9488;border:1px solid #ddd;border-radius:9px;font-size:11px;cursor:pointer;margin-top:5px}
-.foot{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #e0dbd0}
-.alinkbtn{font-size:11px;color:#bbb;background:none;border:none;cursor:pointer;text-decoration:underline;font-family:'Inter',sans-serif}
-.pwrow{display:flex;gap:5px;justify-content:center;margin-top:7px}
-.pwrow input{width:110px;padding:7px 10px;border-radius:9px;border:1px solid #ddd;font-size:12px;color:#1a1a1a;background:#fff;font-family:'Inter',sans-serif}
-.pwrow input:focus{outline:none;border-color:#3d6b45}
+.pw-panel{margin-top:1.5rem;display:flex;gap:5px;justify-content:center}
+.pw-panel input{width:120px;padding:7px 10px;border-radius:9px;border:1px solid #ddd;font-size:12px;color:#1a1a1a;background:#fff;font-family:'Inter',sans-serif}
+.pw-panel input:focus{outline:none;border-color:#3d6b45}
 .gobtn{padding:7px 14px;border-radius:9px;background:#1a1a1a;color:#fff;border:none;font-size:12px;cursor:pointer}
 .cxbtn2{padding:7px 10px;border-radius:9px;border:1px solid #ddd;background:#fff;color:#aaa;font-size:12px;cursor:pointer}
 .pwerr{font-size:11px;color:#c0392b;text-align:center;margin-top:5px}
@@ -85,10 +83,10 @@ var MO=['Январь','Февраль','Март','Апрель','Май','Ию
 var MOR=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 var WDR=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 var DOW=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
-var STORE_CFG='bk-cfg-v1',STORE_BK='bk-data-v1';
 var config={},bookings={};
 var vd=new Date(),sel=null,admSel=null,exSlot=null;
 var isAdm=false,showPw=false,pwErr=false,savedMsg=false;
+var titleClicks=0,titleTimer=null;
 vd.setDate(1);
 
 function fd(y,m,d){return y+'-'+p2(m+1)+'-'+p2(d)}
@@ -104,17 +102,24 @@ function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function mk(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e}
 
 function loadData(){
-  try{var c=localStorage.getItem(STORE_CFG);if(c)config=JSON.parse(c);}catch(e){}
-  try{var b=localStorage.getItem(STORE_BK);if(b)bookings=JSON.parse(b);}catch(e){}
+  try{var c=localStorage.getItem('bk-cfg-v1');if(c)config=JSON.parse(c);}catch(e){}
+  try{var b=localStorage.getItem('bk-data-v1');if(b)bookings=JSON.parse(b);}catch(e){}
 }
-function saveCfg(){try{localStorage.setItem(STORE_CFG,JSON.stringify(config));}catch(e){}}
-function saveBk(){try{localStorage.setItem(STORE_BK,JSON.stringify(bookings));}catch(e){}}
+function saveCfg(){try{localStorage.setItem('bk-cfg-v1',JSON.stringify(config));}catch(e){}}
+function saveBk(){try{localStorage.setItem('bk-data-v1',JSON.stringify(bookings));}catch(e){}}
 
 function getSubtitle(){
   var open=Object.values(config).filter(function(c){return c&&c.open});
   if(!open.length)return 'Выберите дату для записи';
   var s=open[0],eh=s.sh+Math.floor((s.sm+s.dur*s.n)/60),em=(s.sm+s.dur*s.n)%60;
   return 'слоты по '+s.dur+' мин · '+p2(s.sh)+':'+p2(s.sm)+' — '+p2(eh)+':'+p2(em);
+}
+
+function onTitleClick(){
+  titleClicks++;
+  clearTimeout(titleTimer);
+  titleTimer=setTimeout(function(){titleClicks=0},1500);
+  if(titleClicks>=5){titleClicks=0;showPw=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},30);}
 }
 
 function render(){
@@ -127,9 +132,21 @@ function render(){
     var bar=mk('div','admin-bar','<span class="admin-lbl">⚙ Режим администратора</span><button class="xbtn" id="xadm">Выйти</button>');
     pg.appendChild(bar);
     bar.querySelector('#xadm').onclick=function(){isAdm=false;admSel=null;render()};
-  } else {
-    pg.appendChild(mk('div','page-title','Запись на консультацию'));
-    pg.appendChild(mk('div','page-sub',getSubtitle()));
+  }
+
+  var title=mk('div','page-title','Запись на консультацию');
+  title.onclick=onTitleClick;
+  pg.appendChild(title);
+  pg.appendChild(mk('div','page-sub',getSubtitle()));
+
+  // Hidden pw panel
+  if(showPw&&!isAdm){
+    var pwp=mk('div','pw-panel','<input type="password" id="pwin" placeholder="Пароль"><button class="gobtn" id="pwgo">Войти</button><button class="cxbtn2" id="pwcx">✕</button>');
+    pg.appendChild(pwp);
+    if(pwErr)pg.appendChild(mk('div','pwerr','Неверный пароль'));
+    pwp.querySelector('#pwgo').onclick=function(){if(document.getElementById('pwin').value==='1234'){isAdm=true;showPw=false;pwErr=false;render()}else{pwErr=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},20)}};
+    pwp.querySelector('#pwcx').onclick=function(){showPw=false;pwErr=false;render()};
+    pwp.querySelector('#pwin').onkeydown=function(e){if(e.key==='Enter')pwp.querySelector('#pwgo').click()};
   }
 
   var card=mk('div','cal-card');
@@ -150,8 +167,7 @@ function render(){
       var taken=Object.keys(bookings[ds]||{}).length;
       var full=avail&&taken>=(c2?c2.n:0);
       var isSel=isAdm?admSel===ds:sel===ds;
-      var cls='day'+(avail||isAdm?' avail':'')+(ds===tds?' today':'')+(isSel?' sel':'');
-      if(!isSel)cls+=' cur';
+      var cls='day cur'+(avail||isAdm?' avail':'')+(ds===tds?' today':'')+(isSel?' sel':'');
       var cell=mk('div',cls,String(d));
       if(avail&&!isSel){var dot=mk('div','dot'+(full?' full':''));cell.appendChild(dot)}
       if(isAdm){cell.style.cursor='pointer';cell.onclick=function(){admSel=ds;savedMsg=false;render()}}
@@ -162,13 +178,11 @@ function render(){
   card.appendChild(g);
 
   var selCfg=sel?config[sel]:null;
-  if(!isAdm){
-    if(selCfg&&selCfg.open){
-      var eh2=selCfg.sh+Math.floor((selCfg.sm+selCfg.dur*selCfg.n)/60),em2=(selCfg.sm+selCfg.dur*selCfg.n)%60;
-      card.appendChild(mk('div','cal-info','Рабочие часы: '+p2(selCfg.sh)+':'+p2(selCfg.sm)+' — '+p2(eh2)+':'+p2(em2)+' · '+selCfg.n+' слотов · по '+selCfg.dur+' мин'));
-    } else {
-      card.appendChild(mk('div','cal-info','Выберите дату из доступных'));
-    }
+  if(selCfg&&selCfg.open){
+    var eh2=selCfg.sh+Math.floor((selCfg.sm+selCfg.dur*selCfg.n)/60),em2=(selCfg.sm+selCfg.dur*selCfg.n)%60;
+    card.appendChild(mk('div','cal-info','Рабочие часы: '+p2(selCfg.sh)+':'+p2(selCfg.sm)+' — '+p2(eh2)+':'+p2(em2)+' · '+selCfg.n+' слотов · по '+selCfg.dur+' мин'));
+  } else {
+    card.appendChild(mk('div','cal-info','Выберите дату из доступных'));
   }
   pg.appendChild(card);
 
@@ -222,17 +236,6 @@ function render(){
       sa.appendChild(sc);
     });
     pg.appendChild(sa);
-  }
-
-  if(!isAdm){
-    var foot=mk('div','foot','<button class="alinkbtn" id="alink">Администратор</button>'+(showPw?'<div class="pwrow"><input type="password" id="pwin" placeholder="Пароль"><button class="gobtn" id="pwgo">Войти</button><button class="cxbtn2" id="pwcx">✕</button></div>'+(pwErr?'<div class="pwerr">Неверный пароль</div>':''):''));
-    pg.appendChild(foot);
-    foot.querySelector('#alink').onclick=function(){showPw=!showPw;pwErr=false;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},20)};
-    if(showPw){
-      foot.querySelector('#pwgo').onclick=function(){if(document.getElementById('pwin').value==='1234'){isAdm=true;showPw=false;pwErr=false;render()}else{pwErr=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},20)}};
-      foot.querySelector('#pwcx').onclick=function(){showPw=false;pwErr=false;render()};
-      foot.querySelector('#pwin').onkeydown=function(e){if(e.key==='Enter')foot.querySelector('#pwgo').click()};
-    }
   }
 }
 
