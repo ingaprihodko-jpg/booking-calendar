@@ -260,7 +260,7 @@ function render(){
 
     var expandedSlotTime='';
     slts.forEach(function(s){
-      var tk=tkns[s.i];
+      var tk=tkns[s.i]||tkns[String(s.i)];
       var isEx=exSlot===s.i;
       var sc=document.createElement('div');sc.className='slot-card'+(tk?' taken':'');
 
@@ -316,7 +316,7 @@ function render(){
         if(!sub.classList.contains('ok'))return;
         var name=nm.value.trim(),phone=ph.value.trim();
         if(!bookings[sel])bookings[sel]={};
-        bookings[sel][exSlot]=name+' · '+phone;
+        bookings[sel][String(exSlot)]=name+' · '+phone;
         saveBk();
         var dl=dlbl(sel);
         sendTG(name,phone,dl.day,expandedSlotTime);
@@ -344,7 +344,7 @@ function loadSlotsFromSheets(date, callback) {
       if(data.ok && data.taken){
         if(!bookings[date])bookings[date]={};
         data.taken.forEach(function(t){
-          bookings[date][t.slot]=t.name+' · '+'(из таблицы)';
+          bookings[date][String(t.slot)]=t.name+' · '+'(из таблицы)';
         });
         saveBk();
       }
