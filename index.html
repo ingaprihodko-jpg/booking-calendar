@@ -126,16 +126,19 @@ function onTitleClick(){
 var TG_TOKEN='8944362004:AAFmcsO5W3XtZtxWfsGHD1MO3QcLKbhO6zE';
 var TG_CHAT='261652933';
 
+var TG_CHATS=['261652933','329728752'];
 function sendTG(name, phone, date, time){
   var text='\u{1F4C5} *Новая запись на консультацию*\n\n'
     +'\u{1F464} Имя: '+name+'\n'
     +'\u{1F4DE} Телефон: '+phone+'\n'
     +'\u{1F4C6} Дата: '+date+'\n'
     +'\u23F0 Время: '+time;
-  fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({chat_id:TG_CHAT,text:text,parse_mode:'Markdown'})
+  TG_CHATS.forEach(function(cid){
+    fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cid,text:text,parse_mode:'Markdown'})
+    });
   });
 }
 
