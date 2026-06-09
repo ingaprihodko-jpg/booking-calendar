@@ -341,11 +341,13 @@ function loadSlotsFromSheets(date, callback) {
   fetch(SCRIPT_URL+'?action=getSlots&date='+encodeURIComponent(date))
     .then(function(r){return r.json();})
     .then(function(data){
-      if(data.ok && data.taken){
-        if(!bookings[date])bookings[date]={};
-        data.taken.forEach(function(t){
-          bookings[date][String(t.slot)]=t.name+' · '+'(из таблицы)';
-        });
+      if(data.ok){
+        bookings[date]={};
+        if(data.taken){
+          data.taken.forEach(function(t){
+            bookings[date][String(t.slot)]=t.name;
+          });
+        }
         saveBk();
       }
       callback();
