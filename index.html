@@ -109,6 +109,7 @@ var config={'2026-06-15':{open:true,n:8,sh:16,sm:0,dur:15}};
 var bookings={};
 try{var _b=localStorage.getItem('bk-data-v1');if(_b)bookings=JSON.parse(_b);}catch(e){}
 try{var _c=localStorage.getItem('bk-cfg-v1');if(_c){var _c2=JSON.parse(_c);Object.assign(config,_c2);}}catch(e){}
+var SCRIPT_URL='https://script.google.com/macros/s/AKfycbwjUDdk3uZs_H4UGOvDITuB7qE8RXKWRUErmH4O4xAX2NCJcm80sxOdZfv8rignFaaf/exec';
 function saveBk(){try{localStorage.setItem('bk-data-v1',JSON.stringify(bookings));}catch(e){}}
 function saveCfg(){try{localStorage.setItem('bk-cfg-v1',JSON.stringify(config));}catch(e){}}
 
@@ -208,7 +209,7 @@ function render(){
       var cell=document.createElement('div');cell.className=cls;cell.textContent=String(d);
       if(avail&&!isSel){var dot=document.createElement('div');dot.className='dot'+(full?' full':'');cell.appendChild(dot);}
       if(isAdm){cell.style.cursor='pointer';cell.onclick=function(){admSel=ds;savedMsg=false;render();};}
-      else if(avail&&!full){cell.onclick=function(){sel=ds;exSlot=null;render();};}
+      else if(avail&&!full){cell.onclick=function(){sel=ds;exSlot=null;loadSlotsFromSheets(ds,function(){render();});};}
       g.appendChild(cell);
     })(d);
   }
@@ -319,6 +320,8 @@ function render(){
         saveBk();
         var dl=dlbl(sel);
         sendTG(name,phone,dl.day,expandedSlotTime);
+        // Save to Google Sheets
+        fetch(SCRIPT_URL+'?action=book&date='+encodeURIComponent(sel)+'&slot='+exSlot+'&time='+encodeURIComponent(expandedSlotTime)+'&name='+encodeURIComponent(name)+'&phone='+encodeURIComponent(phone)).catch(function(){});
         // Show success in the card
         var card=sub.closest('.slot-card');
         card.innerHTML='<div style="text-align:center;padding:16px 8px">'
@@ -334,7 +337,24 @@ function render(){
   }
 }
 
-render();
+function loadSlotsFromSheets(date, callback) {
+  fetch(SCRIPT_URL+'?action=getSlots&date='+encodeURIComponent(date))
+    .then(function(r){return r.json();})
+    .then(function(data){
+      if(data.ok && data.taken){
+        if(!bookings[date])bookings[date]={};
+        data.taken.forEach(function(t){
+          bookings[date][t.slot]=t.name+' · '+'(из таблицы)';
+        });
+        saveBk();
+      }
+      callback();
+    })
+    .catch(function(){callback();});
+}
+
+// Load slots for June 15 on start
+loadSlotsFromSheets('2026-06-15', function(){render();});
 </script>
 </body>
 </html>
