@@ -144,7 +144,7 @@ function updateFormBtn(){
   var ph=document.getElementById('sf-ph');
   var btn=document.getElementById('sf-sub');
   if(!nm||!ph||!btn)return;
-  var ok=nm.value.trim()&&ph.value.trim()&&formConsent;
+  var ok=nm.value.trim()&&ph.value.trim();
   if(ok)btn.classList.add('ok'); else btn.classList.remove('ok');
 }
 
@@ -285,10 +285,7 @@ function render(){
           +'<input id="sf-nm" class="sf-input" type="text" placeholder="Введите имя и фамилию" maxlength="60" autocomplete="off">'
           +'<label class="sf-label">Номер телефона или ссылка на Telegram</label>'
           +'<input id="sf-ph" class="sf-input" type="text" placeholder="+7... или @username" maxlength="60" autocomplete="off">'
-          +'<div class="sf-consent-row">'
-          +'<div class="sf-cb" id="sf-cb"><span class="sf-ck">✓</span></div>'
-          +'<div class="sf-consent-txt">Я даю согласие на <a href="https://f5game.site/politika" target="_blank">обработку персональных данных</a></div>'
-          +'</div>'
+          
           +'<button class="sf-submit" id="sf-sub">Записаться</button>'
           +'<button class="sf-cancel" id="sf-cx">Отмена</button>'
           +'</div>';
@@ -308,13 +305,11 @@ function render(){
     if(exSlot!==null&&document.getElementById('sf-nm')){
       var nm=document.getElementById('sf-nm');
       var ph=document.getElementById('sf-ph');
-      var cb=document.getElementById('sf-cb');
       var sub=document.getElementById('sf-sub');
       var cx=document.getElementById('sf-cx');
 
       nm.oninput=updateFormBtn;
       ph.oninput=updateFormBtn;
-      cb.onclick=function(){formConsent=!formConsent;cb.classList.toggle('on',formConsent);updateFormBtn();};
       sub.onclick=function(e){
         e.stopPropagation();
         if(!sub.classList.contains('ok'))return;
