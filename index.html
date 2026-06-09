@@ -276,7 +276,7 @@ function render(){
           +'<button class="sf-cancel" id="cncl'+s.i+'">Отмена</button>';
         sc.appendChild(form);
 
-        (function(si){
+        (function(si,st){
           var consent=false;
           function upd(){
             var nm=document.getElementById('nm'+si).value.trim();
@@ -300,16 +300,19 @@ function render(){
             bookings[sel][si]=nm+' · '+ph;
             saveBk();
             var dl=dlbl(sel);
-            sendTG(nm,ph,dl.day,SLOTS_CACHE[si].t);
-            exSlot=null;render();
+            sendTG(nm,ph,dl.day,st);
+            // Show success message
+            var fc=document.getElementById('sub'+si).closest('.slot-card');
+            if(fc){fc.innerHTML='<div style="text-align:center;padding:16px 0"><div style="font-size:28px;margin-bottom:8px">✅</div><div style="font-size:15px;font-weight:700;color:#3d6b45;margin-bottom:4px">Вы записаны!</div><div style="font-size:12px;color:#9a9488">'+dl.day+', '+st+'</div></div>';}
+            exSlot=null;
+            setTimeout(function(){render();},2500);
           };
           document.getElementById('cncl'+si).onclick=function(){exSlot=null;render();};
-        })(s.i);
+        })(s.i,s.t);
       }
       sa.appendChild(sc);
     });
-    // Cache slots for TG call
-    window.SLOTS_CACHE=slts;
+
     pg.appendChild(sa);
   }
 }
