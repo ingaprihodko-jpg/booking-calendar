@@ -3,53 +3,65 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Запись на консультацию</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<title>Точка Роста — Запись на консультацию</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:wght@500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#ece7de;font-family:'Inter',sans-serif;min-height:100vh}
 #page{max-width:420px;margin:0 auto;padding:1.25rem 1rem 3rem}
 .page-title{font-size:22px;font-weight:700;color:#1a1a1a;margin-bottom:3px;letter-spacing:-0.3px;cursor:default;user-select:none}
-.page-sub{font-size:12px;color:#9a9488;margin-bottom:1.25rem}
-.cal-card{background:#f0ebe1;border-radius:18px;padding:1.25rem 1rem 1rem}
+.page-sub{font-size:12px;color:#9a9488;margin-bottom:4px}
+.page-sub:last-of-type{margin-bottom:1.25rem}
+.cal-card{background:#f0ebe1;border-radius:18px;padding:1.25rem 1rem 1rem;margin-bottom:.5rem}
 .cal-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.1rem}
-.cal-nav-btn{width:34px;height:34px;background:#fff;border:none;border-radius:10px;cursor:pointer;font-size:15px;color:#555;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.cal-nav-btn:hover{background:#f5f5f5}
-.cal-mo-name{font-family:'Lora',serif;font-size:17px;font-weight:500;color:#1a1a1a}
+.cal-nav{width:34px;height:34px;background:#fff;border:none;border-radius:10px;cursor:pointer;font-size:16px;color:#555;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.cal-nav:hover{background:#f5f5f5}
+.cal-mo{font-family:'Lora',serif;font-size:17px;font-weight:500;color:#1a1a1a}
 .cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
 .dow{font-size:11px;color:#aaa;text-align:center;padding:4px 0;font-weight:500;letter-spacing:.5px}
-.day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;font-size:13px;color:#bbb;position:relative;cursor:default;transition:background .15s}
+.day{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:10px;font-size:13px;color:#bbb;position:relative;cursor:default}
 .day.cur{color:#888}
 .day.avail{background:#fff;color:#1a1a1a;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.06)}
 .day.avail:hover{background:#f5f5f5}
-.day.sel{background:#b8882a!important;color:#fff!important;box-shadow:0 2px 6px rgba(184,136,42,.3)}
+.day.sel{background:#b8882a!important;color:#fff!important}
 .day.today:not(.sel){border:1.5px solid #c8882a;color:#c8882a}
 .dot{width:5px;height:5px;border-radius:50%;background:#3d6b45;position:absolute;bottom:4px}
 .dot.full{background:#bbb}
-.cal-info{font-size:11px;color:#aaa;margin-top:.875rem;line-height:1.6;padding:0 2px}
+.cal-info{font-size:11px;color:#aaa;margin-top:.875rem;line-height:1.6}
 .slots-area{margin-top:1.25rem}
-.date-header{margin-bottom:.875rem}
-.dh-day{font-size:16px;font-weight:700;color:#1a1a1a}
-.dh-wd{font-size:13px;color:#9a9488;margin-top:1px}
+.dh-day{font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:2px}
+.dh-wd{font-size:13px;color:#9a9488;margin-bottom:.875rem}
 .slot-card{background:#fff;border-radius:14px;padding:13px 15px;margin-bottom:10px}
 .slot-card.taken{opacity:.65}
 .sc-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
-.sc-time{font-size:15px;font-weight:700;color:#1a1a1a;letter-spacing:-.2px}
+.sc-time{font-size:15px;font-weight:700;color:#1a1a1a}
 .sc-free{font-size:11px;font-weight:600;color:#3d6b45;letter-spacing:.5px;text-transform:uppercase}
 .sc-taken-lbl{font-size:11px;color:#bbb;letter-spacing:.5px;text-transform:uppercase}
-.sc-btn{width:100%;background:#e8f2ec;border:none;border-radius:10px;padding:10px 12px;cursor:pointer;transition:background .15s;text-align:left}
+.sc-btn{width:100%;background:#e8f2ec;border:none;border-radius:10px;padding:10px 12px;cursor:pointer;text-align:left}
 .sc-btn:hover{background:#d5e9dc}
 .sc-btn-name{font-size:13px;font-weight:700;color:#3d6b45}
 .sc-btn-sub{font-size:11px;color:#5a8f6a;margin-top:2px}
 .sc-taken-btn{width:100%;background:#f2f2f2;border:none;border-radius:10px;padding:10px 12px;text-align:left}
 .sc-taken-name{font-size:13px;font-weight:600;color:#999}
 .sc-taken-sub{font-size:11px;color:#bbb;margin-top:2px}
-.inline-bk{margin-top:10px;padding-top:10px;border-top:1px solid #f0ebe1;display:flex;gap:6px}
-.inline-bk{flex-wrap:wrap}.inline-bk input{flex:1;min-width:120px;padding:8px 10px;border-radius:9px;border:1px solid #ddd;font-size:13px;color:#1a1a1a;background:#f9f9f9;font-family:'Inter',sans-serif}
-.inline-bk input:focus{outline:none;border-color:#3d6b45}
-.inline-bk .ok{padding:8px 14px;border-radius:9px;background:#3d6b45;color:#fff;border:none;font-size:13px;font-weight:600;cursor:pointer}
-.inline-bk .cx{padding:8px 10px;border-radius:9px;border:1px solid #e5e5e5;background:#fff;color:#aaa;font-size:12px;cursor:pointer}
+/* Form */
+.slot-form{margin-top:12px;padding-top:14px;border-top:1px solid #e8e2d8}
+.sf-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
+.sf-time{font-size:12px;color:#9a9488;margin-bottom:12px}
+.sf-label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:5px;margin-top:10px}
+.sf-input{width:100%;padding:9px 12px;border-radius:9px;border:1px solid #ddd;font-size:13px;color:#1a1a1a;background:#fafaf8;font-family:'Inter',sans-serif}
+.sf-input:focus{outline:none;border-color:#3d6b45}
+.sf-consent-row{display:flex;align-items:flex-start;gap:10px;margin-top:12px;margin-bottom:14px}
+.sf-cb{width:20px;height:20px;min-width:20px;border:1.5px solid #3d6b45;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#fff;transition:background .15s;margin-top:1px}
+.sf-cb.on{background:#3d6b45}
+.sf-ck{display:none;color:#fff;font-size:12px;font-weight:700}
+.sf-cb.on .sf-ck{display:block}
+.sf-consent-txt{font-size:12px;color:#666;line-height:1.45}
+.sf-submit{width:100%;padding:11px;border-radius:9px;border:none;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;background:#f4d0b8;color:#9e6050;cursor:not-allowed;transition:background .2s}
+.sf-submit.ok{background:#c0144c;color:#fff;cursor:pointer}
+.sf-submit.ok:hover{background:#a00f3e}
+.sf-cancel{width:100%;padding:7px;border-radius:9px;border:1px solid #e0dbd0;background:transparent;color:#9a9488;font-size:12px;cursor:pointer;margin-top:6px;font-family:'Inter',sans-serif}
+/* Admin */
 .admin-bar{display:flex;align-items:center;justify-content:space-between;padding:9px 13px;background:#f0ebe1;border-radius:10px;margin-bottom:1.1rem;border:1px solid #e0dbd0}
 .admin-lbl{font-size:12px;font-weight:600;color:#3d6b45}
 .xbtn{font-size:11px;color:#9a9488;background:none;border:none;cursor:pointer}
@@ -65,30 +77,15 @@ body{background:#ece7de;font-family:'Inter',sans-serif;min-height:100vh}
 .ts:after{content:'';position:absolute;width:15px;height:15px;background:#fff;border-radius:50%;top:3px;left:3px;transition:transform .2s}
 .tgl input:checked+.ts:after{transform:translateX(17px)}
 .svbtn{width:100%;padding:9px;background:#3d6b45;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;margin-top:7px;font-family:'Inter',sans-serif}
-.svbtn:hover{background:#2d5235}
 .clrdaybtn{width:100%;padding:7px;background:transparent;color:#9a9488;border:1px solid #ddd;border-radius:9px;font-size:11px;cursor:pointer;margin-top:5px}
-.pw-panel{margin-top:1.5rem;display:flex;gap:5px;justify-content:center}
+.pw-panel{display:flex;gap:5px;justify-content:center;margin-top:7px}
 .pw-panel input{width:120px;padding:7px 10px;border-radius:9px;border:1px solid #ddd;font-size:12px;color:#1a1a1a;background:#fff;font-family:'Inter',sans-serif}
 .pw-panel input:focus{outline:none;border-color:#3d6b45}
 .gobtn{padding:7px 14px;border-radius:9px;background:#1a1a1a;color:#fff;border:none;font-size:12px;cursor:pointer}
-.cxbtn2{padding:7px 10px;border-radius:9px;border:1px solid #ddd;background:#fff;color:#aaa;font-size:12px;cursor:pointer}
+.cxbtn{padding:7px 10px;border-radius:9px;border:1px solid #ddd;background:#fff;color:#aaa;font-size:12px;cursor:pointer}
 .pwerr{font-size:11px;color:#c0392b;text-align:center;margin-top:5px}
 .savedmsg{font-size:11px;color:#3d6b45;text-align:center;margin-top:5px;font-weight:600}
-.slot-form{margin-top:10px;padding-top:12px;border-top:1px solid #e8e2d8}
-.sf-title{font-size:14px;font-weight:700;color:#1a1a1a;margin-bottom:3px}
-.sf-time{font-size:12px;color:#9a9488;margin-bottom:12px}
-.sf-label{display:block;font-size:12px;font-weight:600;color:#555;margin-bottom:5px;margin-top:10px}
-.sf-input{width:100%;padding:9px 12px;border-radius:9px;border:1px solid #ddd;font-size:13px;color:#1a1a1a;background:#fafaf8;font-family:'Inter',sans-serif}
-.sf-input:focus{outline:none;border-color:#3d6b45}
-.sf-consent-row{display:flex;align-items:flex-start;gap:10px;margin-top:12px;margin-bottom:14px}
-.sf-checkbox{width:20px;height:20px;min-width:20px;border:1.5px solid #3d6b45;border-radius:5px;cursor:pointer;display:flex;align-items:center;justify-content:center;background:#fff;transition:background .15s;margin-top:1px}
-.sf-checkbox.checked{background:#3d6b45}
-.sf-check{display:none;color:#fff;font-size:13px;font-weight:700}
-.sf-checkbox.checked .sf-check{display:block}
-.sf-consent-text{font-size:12px;color:#666;line-height:1.45}
-.sf-btn{width:100%;padding:11px;border-radius:9px;border:none;font-size:14px;font-weight:700;font-family:'Inter',sans-serif;background:#f4b8cc;color:#9e5070;cursor:not-allowed;transition:background .2s}
-.sf-btn.active{background:#c0144c;color:#fff;cursor:pointer}
-.sf-cancel{width:100%;padding:7px;border-radius:9px;border:1px solid #e0dbd0;background:transparent;color:#9a9488;font-size:12px;cursor:pointer;margin-top:6px}
+.foot{text-align:center;margin-top:2rem;padding-top:1rem;border-top:1px solid #e0dbd0}
 </style>
 </head>
 <body>
@@ -98,11 +95,32 @@ var MO=['Январь','Февраль','Март','Апрель','Май','Ию
 var MOR=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 var WDR=['воскресенье','понедельник','вторник','среда','четверг','пятница','суббота'];
 var DOW=['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'];
-var config={'2026-06-15':{open:true,n:8,sh:16,sm:0,dur:15}},bookings={};
-var vd=new Date(),sel=null,admSel=null,exSlot=null;
+
+// TG
+var TG_TOKEN='8944362004:AAFmcsO5W3XtZtxWfsGHD1MO3QcLKbhO6zE';
+var TG_CHATS=['261652933','329728752'];
+function sendTG(name,phone,date,time){
+  var text='📅 *Новая запись на консультацию*\n\n👤 Имя: '+name+'\n📞 Контакт: '+phone+'\n📆 Дата: '+date+'\n⏰ Время: '+time;
+  TG_CHATS.forEach(function(cid){
+    fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({chat_id:cid,text:text,parse_mode:'Markdown'})
+    }).catch(function(){});
+  });
+}
+
+// Pre-seeded config: June 15, 8 slots x 15min from 16:00
+var config={'2026-06-15':{open:true,n:8,sh:16,sm:0,dur:15}};
+var bookings={};
+try{var b=localStorage.getItem('bk-data-v1');if(b)bookings=JSON.parse(b);}catch(e){}
+function saveBk(){try{localStorage.setItem('bk-data-v1',JSON.stringify(bookings));}catch(e){}}
+function saveCfg(){try{localStorage.setItem('bk-cfg-v1',JSON.stringify(config));}catch(e){}}
+// Load saved config but keep June 15 if nothing saved
+try{var sc=localStorage.getItem('bk-cfg-v1');if(sc){var sc2=JSON.parse(sc);Object.assign(config,sc2);}}catch(e){}
+
+var vd=new Date(2026,5,1),sel=null,admSel=null,exSlot=null;
 var isAdm=false,showPw=false,pwErr=false,savedMsg=false;
 var titleClicks=0,titleTimer=null;
-vd.setDate(1);
 
 function fd(y,m,d){return y+'-'+p2(m+1)+'-'+p2(d)}
 function p2(n){return String(n).padStart(2,'0')}
@@ -110,51 +128,21 @@ function dlbl(ds){var a=ds.split('-').map(Number),y=a[0],m=a[1],d=a[2],w=new Dat
 function getSlots(c){
   if(!c||!c.open)return[];
   var r=[],h=c.sh,m=c.sm;
-  for(var i=0;i<c.n;i++){var eh=h+Math.floor((m+c.dur)/60),em=(m+c.dur)%60;r.push({i:i,t:p2(h)+':'+p2(m)+' — '+p2(eh)+':'+p2(em)});h=eh;m=em;}
+  for(var i=0;i<c.n;i++){
+    var eh=h+Math.floor((m+c.dur)/60),em=(m+c.dur)%60;
+    r.push({i:i,t:p2(h)+':'+p2(m)+' — '+p2(eh)+':'+p2(em)});
+    h=eh;m=em;
+  }
   return r;
 }
 function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
 function mk(tag,cls,html){var e=document.createElement(tag);if(cls)e.className=cls;if(html!==undefined)e.innerHTML=html;return e}
 
-function loadData(){
-  try{var c=localStorage.getItem('bk-cfg-v1');if(c)config=JSON.parse(c);}catch(e){}
-  try{var b=localStorage.getItem('bk-data-v1');if(b)bookings=JSON.parse(b);}catch(e){}
-}
-function saveCfg(){try{localStorage.setItem('bk-cfg-v1',JSON.stringify(config));}catch(e){}}
-function saveBk(){try{localStorage.setItem('bk-data-v1',JSON.stringify(bookings));}catch(e){}}
-
-function getSubtitle(){
-  var open=Object.values(config).filter(function(c){return c&&c.open});
-  if(!open.length)return 'Выберите дату для записи';
-  var s=open[0],eh=s.sh+Math.floor((s.sm+s.dur*s.n)/60),em=(s.sm+s.dur*s.n)%60;
-  return 'слоты по '+s.dur+' мин · '+p2(s.sh)+':'+p2(s.sm)+' — '+p2(eh)+':'+p2(em);
-}
-
 function onTitleClick(){
   titleClicks++;
   clearTimeout(titleTimer);
   titleTimer=setTimeout(function(){titleClicks=0},1500);
-  if(titleClicks>=5){titleClicks=0;showPw=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},30);}
-}
-
-
-var TG_TOKEN='8944362004:AAFmcsO5W3XtZtxWfsGHD1MO3QcLKbhO6zE';
-var TG_CHAT='261652933';
-
-var TG_CHATS=['261652933','329728752'];
-function sendTG(name, phone, date, time){
-  var text='\u{1F4C5} *Новая запись на консультацию*\n\n'
-    +'\u{1F464} Имя: '+name+'\n'
-    +'\u{1F4DE} Телефон: '+phone+'\n'
-    +'\u{1F4C6} Дата: '+date+'\n'
-    +'\u23F0 Время: '+time;
-  TG_CHATS.forEach(function(cid){
-    fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({chat_id:cid,text:text,parse_mode:'Markdown'})
-    });
-  });
+  if(titleClicks>=5){titleClicks=0;showPw=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus();},30);}
 }
 
 function render(){
@@ -166,34 +154,37 @@ function render(){
   if(isAdm){
     var bar=mk('div','admin-bar','<span class="admin-lbl">⚙ Режим администратора</span><button class="xbtn" id="xadm">Выйти</button>');
     pg.appendChild(bar);
-    bar.querySelector('#xadm').onclick=function(){isAdm=false;admSel=null;render()};
+    bar.querySelector('#xadm').onclick=function(){isAdm=false;admSel=null;render();};
   }
 
-  var title=mk('div','page-title','ТОЧКА РОСТА');
-  title.onclick=onTitleClick;
-  pg.appendChild(title);
+  var titleEl=mk('div','page-title','ТОЧКА РОСТА');
+  titleEl.onclick=onTitleClick;
+  pg.appendChild(titleEl);
   pg.appendChild(mk('div','page-sub','экспресс-консультация с Ольгой Грищенко'));
   pg.appendChild(mk('div','page-sub','15 июня, с 16:00 мск до 18:00 мск'));
   pg.appendChild(mk('div','page-sub','Выберите свободный слот и запишитесь на встречу:'));
 
-  // Hidden pw panel
   if(showPw&&!isAdm){
-    var pwp=mk('div','pw-panel','<input type="password" id="pwin" placeholder="Пароль"><button class="gobtn" id="pwgo">Войти</button><button class="cxbtn2" id="pwcx">✕</button>');
-    pg.appendChild(pwp);
+    var pwp=mk('div','pw-panel','<input type="password" id="pwin" placeholder="Пароль"><button class="gobtn" id="pwgo">Войти</button><button class="cxbtn" id="pwcx">✕</button>');
     if(pwErr)pg.appendChild(mk('div','pwerr','Неверный пароль'));
-    pwp.querySelector('#pwgo').onclick=function(){if(document.getElementById('pwin').value==='1234'){isAdm=true;showPw=false;pwErr=false;render()}else{pwErr=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus()},20)}};
-    pwp.querySelector('#pwcx').onclick=function(){showPw=false;pwErr=false;render()};
-    pwp.querySelector('#pwin').onkeydown=function(e){if(e.key==='Enter')pwp.querySelector('#pwgo').click()};
+    pg.appendChild(pwp);
+    pwp.querySelector('#pwgo').onclick=function(){
+      if(document.getElementById('pwin').value==='1234'){isAdm=true;showPw=false;pwErr=false;render();}
+      else{pwErr=true;render();setTimeout(function(){var el=document.getElementById('pwin');if(el)el.focus();},20);}
+    };
+    pwp.querySelector('#pwcx').onclick=function(){showPw=false;pwErr=false;render();};
+    pwp.querySelector('#pwin').onkeydown=function(e){if(e.key==='Enter')pwp.querySelector('#pwgo').click();};
   }
 
+  // Calendar card
   var card=mk('div','cal-card');
-  var top=mk('div','cal-top','<button class="cal-nav-btn" id="prev">‹</button><span class="cal-mo-name">'+MO[mo]+' '+y+'</span><button class="cal-nav-btn" id="next">›</button>');
+  var top=mk('div','cal-top','<button class="cal-nav" id="prev">‹</button><span class="cal-mo">'+MO[mo]+' '+y+'</span><button class="cal-nav" id="next">›</button>');
   card.appendChild(top);
-  top.querySelector('#prev').onclick=function(){vd=new Date(y,mo-1,1);render()};
-  top.querySelector('#next').onclick=function(){vd=new Date(y,mo+1,1);render()};
+  top.querySelector('#prev').onclick=function(){vd=new Date(y,mo-1,1);render();};
+  top.querySelector('#next').onclick=function(){vd=new Date(y,mo+1,1);render();};
 
   var g=mk('div','cal-grid');
-  DOW.forEach(function(d){g.appendChild(mk('div','dow',d))});
+  DOW.forEach(function(d){g.appendChild(mk('div','dow',d));});
   var startDow=(new Date(y,mo,1).getDay()+6)%7;
   var dim=new Date(y,mo+1,0).getDate();
   for(var i=0;i<startDow;i++)g.appendChild(mk('div','day'));
@@ -201,19 +192,18 @@ function render(){
     (function(d){
       var ds=fd(y,mo,d);
       var c2=config[ds],avail=c2&&c2.open;
-      var taken=Object.keys(bookings[ds]||{}).length;
-      var full=avail&&taken>=(c2?c2.n:0);
+      var tkn=Object.keys(bookings[ds]||{}).length;
+      var full=avail&&tkn>=(c2?c2.n:0);
       var isSel=isAdm?admSel===ds:sel===ds;
       var cls='day cur'+(avail||isAdm?' avail':'')+(ds===tds?' today':'')+(isSel?' sel':'');
       var cell=mk('div',cls,String(d));
-      if(avail&&!isSel){var dot=mk('div','dot'+(full?' full':''));cell.appendChild(dot)}
-      if(isAdm){cell.style.cursor='pointer';cell.onclick=function(){admSel=ds;savedMsg=false;render()}}
-      else if(avail&&!full){cell.onclick=function(){sel=ds;exSlot=null;render()}}
+      if(avail&&!isSel){cell.appendChild(mk('div','dot'+(full?' full':'')));}
+      if(isAdm){cell.style.cursor='pointer';cell.onclick=function(){admSel=ds;savedMsg=false;render();};}
+      else if(avail&&!full){cell.onclick=function(){sel=ds;exSlot=null;render();};}
       g.appendChild(cell);
     })(d);
   }
   card.appendChild(g);
-
   var selCfg=sel?config[sel]:null;
   if(selCfg&&selCfg.open){
     var eh2=selCfg.sh+Math.floor((selCfg.sm+selCfg.dur*selCfg.n)/60),em2=(selCfg.sm+selCfg.dur*selCfg.n)%60;
@@ -223,9 +213,10 @@ function render(){
   }
   pg.appendChild(card);
 
+  // Admin config panel
   if(isAdm&&admSel){
     var c2=config[admSel]||{open:false,n:4,sh:10,sm:0,dur:60};
-    var tk=Object.keys(bookings[admSel]||{}).length;
+    var tkn=Object.keys(bookings[admSel]||{}).length;
     var lbl=dlbl(admSel);
     var panel=mk('div','cfg-card','<h3>'+lbl.day+', '+lbl.wd+'</h3>'
       +'<div class="crow"><span class="clbl">Запись открыта</span><label class="tgl"><input type="checkbox" id="cop"'+(c2.open?' checked':'')+'><span class="ts"></span></label></div>'
@@ -233,60 +224,96 @@ function render(){
       +'<div class="crow"><span class="clbl">Час начала</span><input class="cinp" type="number" id="csh" min="0" max="23" value="'+c2.sh+'"></div>'
       +'<div class="crow"><span class="clbl">Минута начала</span><input class="cinp" type="number" id="csm" min="0" max="59" value="'+c2.sm+'"></div>'
       +'<div class="crow"><span class="clbl">Длина слота (мин)</span><input class="cinp" type="number" id="cdur" min="5" max="480" value="'+c2.dur+'"></div>'
-      +(tk>0?'<div style="font-size:11px;color:#9a9488;margin-bottom:5px">Записей: '+tk+'</div>':'')
+      +(tkn>0?'<div style="font-size:11px;color:#9a9488;margin-bottom:5px">Записей: '+tkn+'</div>':'')
       +'<button class="svbtn" id="csave">Сохранить</button>'
       +(savedMsg?'<div class="savedmsg">✓ Сохранено!</div>':'')
-      +(tk>0?'<button class="clrdaybtn" id="cclr">Очистить все записи на этот день</button>':''));
+      +(tkn>0?'<button class="clrdaybtn" id="cclr">Очистить все записи</button>':''));
     panel.querySelector('#csave').onclick=function(){
       config[admSel]={open:panel.querySelector('#cop').checked,n:clamp(parseInt(panel.querySelector('#cn').value)||4,1,30),sh:clamp(parseInt(panel.querySelector('#csh').value)||10,0,23),sm:clamp(parseInt(panel.querySelector('#csm').value)||0,0,59),dur:clamp(parseInt(panel.querySelector('#cdur').value)||60,5,480)};
-      saveCfg();savedMsg=true;render();setTimeout(function(){savedMsg=false},2000);
+      saveCfg();savedMsg=true;render();setTimeout(function(){savedMsg=false;},2000);
     };
     var cclr=panel.querySelector('#cclr');
-    if(cclr)cclr.onclick=function(){if(confirm('Удалить все записи?')){delete bookings[admSel];saveBk();render()}};
+    if(cclr)cclr.onclick=function(){if(confirm('Удалить все записи?')){delete bookings[admSel];saveBk();render();}};
     pg.appendChild(panel);
   }
 
+  // Slots (user mode)
   if(!isAdm&&sel){
-    var c2=config[sel],slts=getSlots(c2),taken=bookings[sel]||{};
+    var c2=config[sel],slts=getSlots(c2),tkns=bookings[sel]||{};
     var sa=mk('div','slots-area');
     var lbl=dlbl(sel);
-    sa.appendChild(mk('div','date-header','<div class="dh-day">'+lbl.day+'</div><div class="dh-wd">'+lbl.wd+'</div>'));
+    sa.appendChild(mk('div','dh-day',lbl.day));
+    sa.appendChild(mk('div','dh-wd',lbl.wd));
     slts.forEach(function(s){
-      var tk=taken[s.i],isEx=exSlot===s.i;
+      var tk=tkns[s.i];
+      var isEx=exSlot===s.i;
       var sc=mk('div','slot-card'+(tk?' taken':''));
       var topRow=mk('div','sc-top');
       topRow.appendChild(mk('span','sc-time',s.t));
       topRow.appendChild(mk('span',tk?'sc-taken-lbl':'sc-free',tk?'ЗАНЯТО':'СВОБОДНО'));
       sc.appendChild(topRow);
-      if(!isEx){
-        var btn=mk('div',tk?'sc-taken-btn':'sc-btn');
-        btn.innerHTML=tk?'<div class="sc-taken-name">'+tk+'</div><div class="sc-taken-sub">Записан(а)</div>':'<div class="sc-btn-name">Записаться</div><div class="sc-btn-sub">Нажмите, чтобы выбрать слот</div>';
-        if(!tk){btn.onclick=function(){exSlot=s.i;render();setTimeout(function(){var el=document.getElementById('ibk'+s.i);if(el)el.focus()},20)}}
-        sc.appendChild(btn);
+      if(tk){
+        var tb=mk('div','sc-taken-btn','<div class="sc-taken-name">'+tk.split(' · ')[0]+'</div><div class="sc-taken-sub">Записан(а)</div>');
+        sc.appendChild(tb);
+      } else if(!isEx){
+        var bb=mk('div','sc-btn','<div class="sc-btn-name">Записаться</div><div class="sc-btn-sub">Нажмите, чтобы выбрать слот</div>');
+        (function(si){bb.onclick=function(){exSlot=si;render();setTimeout(function(){var el=document.getElementById('nm'+si);if(el)el.focus();},30);};})(s.i);
+        sc.appendChild(bb);
       } else {
-        var inf=mk('div','inline-bk','<input id="ibk'+s.i+'" type="text" placeholder="Имя" maxlength="50"><input id="iph'+s.i+'" type="tel" placeholder="Телефон" maxlength="20"><button class="ok">ОК</button><button class="cx">✕</button>');
-        inf.querySelector('.ok').onclick=function(){
-  var nm=document.getElementById('ibk'+s.i).value.trim();
-  var ph=document.getElementById('iph'+s.i).value.trim();
-  if(!nm||!ph)return;
-  if(!bookings[sel])bookings[sel]={};
-  bookings[sel][s.i]=nm+' · '+ph;
-  saveBk();
-  var lbl2=dlbl(sel);
-  sendTG(nm,ph,lbl2.day+' '+lbl2.wd,s.t);
-  exSlot=null;render();
-};
-        inf.querySelector('.cx').onclick=function(){exSlot=null;render()};
-        inf.querySelectorAll('input').forEach(function(inp){inp.onkeydown=function(e){if(e.key==='Enter')inf.querySelector('.ok').click()}});
-        sc.appendChild(inf);
+        // Expanded form
+        var form=mk('div','slot-form');
+        form.innerHTML='<div class="sf-title">Запись на консультацию</div>'
+          +'<div class="sf-time">'+s.t+'</div>'
+          +'<label class="sf-label">Имя и фамилия</label>'
+          +'<input id="nm'+s.i+'" class="sf-input" type="text" placeholder="Введите имя и фамилию" maxlength="60" autocomplete="off">'
+          +'<label class="sf-label">Номер телефона или ссылка на Telegram</label>'
+          +'<input id="ph'+s.i+'" class="sf-input" type="text" placeholder="+7... или @username" maxlength="60" autocomplete="off">'
+          +'<div class="sf-consent-row">'
+            +'<div class="sf-cb" id="cb'+s.i+'"><span class="sf-ck">✓</span></div>'
+            +'<div class="sf-consent-txt">Я даю согласие на обработку персональных данных</div>'
+          +'</div>'
+          +'<button class="sf-submit" id="sub'+s.i+'">Записаться</button>'
+          +'<button class="sf-cancel" id="cncl'+s.i+'">Отмена</button>';
+        sc.appendChild(form);
+
+        (function(si){
+          var consent=false;
+          function upd(){
+            var nm=document.getElementById('nm'+si).value.trim();
+            var ph=document.getElementById('ph'+si).value.trim();
+            var btn=document.getElementById('sub'+si);
+            if(nm&&ph&&consent)btn.classList.add('ok'); else btn.classList.remove('ok');
+          }
+          document.getElementById('cb'+si).onclick=function(){
+            consent=!consent;
+            this.classList.toggle('on',consent);
+            upd();
+          };
+          document.getElementById('nm'+si).oninput=upd;
+          document.getElementById('ph'+si).oninput=upd;
+          document.getElementById('sub'+si).onclick=function(e){
+            e.stopPropagation();
+            if(!this.classList.contains('ok'))return;
+            var nm=document.getElementById('nm'+si).value.trim();
+            var ph=document.getElementById('ph'+si).value.trim();
+            if(!bookings[sel])bookings[sel]={};
+            bookings[sel][si]=nm+' · '+ph;
+            saveBk();
+            var dl=dlbl(sel);
+            sendTG(nm,ph,dl.day,SLOTS_CACHE[si].t);
+            exSlot=null;render();
+          };
+          document.getElementById('cncl'+si).onclick=function(){exSlot=null;render();};
+        })(s.i);
       }
       sa.appendChild(sc);
     });
+    // Cache slots for TG call
+    window.SLOTS_CACHE=slts;
     pg.appendChild(sa);
   }
 }
 
-loadData();
 render();
 </script>
 </body>
