@@ -210,7 +210,7 @@ function render(){
       var cell=document.createElement('div');cell.className=cls;cell.textContent=String(d);
       if(avail&&!isSel){var dot=document.createElement('div');dot.className='dot'+(full?' full':'');cell.appendChild(dot);}
       if(isAdm){cell.style.cursor='pointer';cell.onclick=function(){admSel=ds;savedMsg=false;render();};}
-      else if(avail&&!full){cell.onclick=function(){sel=ds;exSlot=null;loadSlotsFromSheets(ds,function(){render();});};}
+      else if(avail){cell.onclick=function(){sel=ds;exSlot=null;loadSlotsFromSheets(ds,function(){render();});};}
       g.appendChild(cell);
     })(d);
   }
@@ -295,14 +295,17 @@ function render(){
       sa.appendChild(sc);
     });
 
-    // Check if all slots taken
+    // Check if all slots taken - show only message
     var allTaken = slts.length > 0 && slts.every(function(s){ return !!tkns[s.i]||!!tkns[String(s.i)]; });
     if(allTaken){
+      sa.innerHTML = '';
+      var dday2=document.createElement('div');dday2.className='dh-day';dday2.textContent=lbl.day;sa.appendChild(dday2);
+      var dwd2=document.createElement('div');dwd2.className='dh-wd';dwd2.textContent=lbl.wd;sa.appendChild(dwd2);
       var msg = document.createElement('div');
-      msg.style.cssText = 'text-align:center;padding:20px 16px;background:#f0ebe1;border-radius:14px;margin-top:4px';
-      msg.innerHTML = '<div style="font-size:28px;margin-bottom:8px">🙌</div>'
-        +'<div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px">Все слоты заняты</div>'
-        +'<div style="font-size:12px;color:#9a9488">Запись на консультацию закрыта</div>';
+      msg.style.cssText = 'text-align:center;padding:28px 16px;background:#f0ebe1;border-radius:14px;margin-top:4px';
+      msg.innerHTML = '<div style="font-size:36px;margin-bottom:10px">🙌</div>'
+        +'<div style="font-size:16px;font-weight:700;color:#1a1a1a;margin-bottom:6px">Все слоты заняты</div>'
+        +'<div style="font-size:13px;color:#9a9488">Запись на консультацию закрыта</div>';
       sa.appendChild(msg);
     }
 
