@@ -109,6 +109,7 @@ var config={'2026-06-15':{open:true,n:8,sh:16,sm:0,dur:15}};
 var bookings={};
 try{var _b=localStorage.getItem('bk-data-v1');if(_b)bookings=JSON.parse(_b);}catch(e){}
 try{var _c=localStorage.getItem('bk-cfg-v1');if(_c){var _c2=JSON.parse(_c);Object.assign(config,_c2);}}catch(e){}
+config['2026-06-15']={open:true,n:8,sh:16,sm:0,dur:15};
 var SCRIPT_URL='https://script.google.com/macros/s/AKfycbwjUDdk3uZs_H4UGOvDITuB7qE8RXKWRUErmH4O4xAX2NCJcm80sxOdZfv8rignFaaf/exec';
 function saveBk(){try{localStorage.setItem('bk-data-v1',JSON.stringify(bookings));}catch(e){}}
 function saveCfg(){try{localStorage.setItem('bk-cfg-v1',JSON.stringify(config));}catch(e){}}
