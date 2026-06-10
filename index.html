@@ -295,6 +295,17 @@ function render(){
       sa.appendChild(sc);
     });
 
+    // Check if all slots taken
+    var allTaken = slts.length > 0 && slts.every(function(s){ return !!tkns[s.i]||!!tkns[String(s.i)]; });
+    if(allTaken){
+      var msg = document.createElement('div');
+      msg.style.cssText = 'text-align:center;padding:20px 16px;background:#f0ebe1;border-radius:14px;margin-top:4px';
+      msg.innerHTML = '<div style="font-size:28px;margin-bottom:8px">🙌</div>'
+        +'<div style="font-size:15px;font-weight:700;color:#1a1a1a;margin-bottom:4px">Все слоты заняты</div>'
+        +'<div style="font-size:12px;color:#9a9488">Запись на консультацию закрыта</div>';
+      sa.appendChild(msg);
+    }
+
     // Append to DOM FIRST
     pg.appendChild(sa);
 
